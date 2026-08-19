@@ -1,0 +1,520 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --danger-color: #ef4444;
+  --success-color: #16a34a;
+}
+
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-main);
+}
+
+/* ===================== */
+/* LAYOUT */
+/* ===================== */
+
+.page-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* ===================== */
+/* BUTTONS */
+/* ===================== */
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+}
+
+/* ===================== */
+/* TABLE */
+/* ===================== */
+
+.table-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.custom-table th {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.custom-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ROLE BADGE */
+.role-badge {
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #ffebee;
+  color: #d32f2f;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===================== */
+/* QR PAGE */
+/* ===================== */
+
+.qr-page-content {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.qr-scan-area {
+  width: 400px;
+  height: 400px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border-color);
+}
+
+/* ===================== */
+/* MODAL */
+/* ===================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 550px;
+
+  border-radius: 18px;
+  padding: 25px;
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  animation: modalFade 0.25s ease;
+}
+
+/* form */
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-group-row input {
+  flex: 1;
+}
+
+.custom-form input,
+.custom-form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.custom-form input:focus,
+.custom-form textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+/* modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.btn-submit {
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+}
+
+/* ===================== */
+/* ANIMATION */
+/* ===================== */
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================== */
+/* UTILITIES */
+/* ===================== */
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.qr-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.qr-page-content {
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-scan-area {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+
+  border: 2px dashed var(--border-color);
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f9fafb;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.form-group input {
+  background-color: #f9fafb;
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.qr-scan-area {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f9fafb;
+
+  border: 2px solid #3b82f6;   /* 🔵 الأزرق */
+  border-radius: 16px;
+
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+}
+.qr-scan-area {
+  width: 50%;
+  max-width: 520px;   /* 🔥 كان أكبر */
+  height: 520px;      /* 🔥 كان مربع كبير */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f9fafb;
+
+  border-radius: 22px;
+
+  /* 🔵 Blue outer frame */
+  border: 3px solid #3b82f6;
+
+  /* outer glow */
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+
+  position: relative;
+  padding: 28px; /* 🔥 ده اللي بيرجع الـ white gap */
+}
+/* ===================== */
+/* TABLE CONTAINER */
+/* ===================== */
+
+.table-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 20px;
+
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+  overflow-x: auto;
+}
+
+/* ===================== */
+/* TABLE BASE */
+/* ===================== */
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+/* ===================== */
+/* HEADER */
+/* ===================== */
+
+.custom-table thead {
+  background: #f8fafc;
+}
+
+.custom-table th {
+  padding: 14px 16px;
+  text-align: left;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  color: #64748b;
+  text-transform: uppercase;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ===================== */
+/* BODY */
+/* ===================== */
+
+.custom-table td {
+  padding: 16px;
+  font-size: 0.9rem;
+
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+/* row hover */
+.custom-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background: linear-gradient(
+    to right,
+    rgba(59,130,246,0.05),
+    transparent
+  );
+  transform: scale(1.002);
+}
+
+/* ===================== */
+/* ID STYLE */
+/* ===================== */
+
+.custom-table td strong {
+  background: rgba(59,130,246,0.1);
+  color: #2563eb;
+
+  padding: 4px 10px;
+  border-radius: 8px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===================== */
+/* ACTION BUTTONS */
+/* ===================== */
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* edit */
+.btn-edit {
+  background: rgba(59,130,246,0.1);
+  color: #2563eb;
+
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #2563eb;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* delete */
+.btn-delete {
+  background: rgba(239,68,68,0.1);
+  color: #dc2626;
+
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* ===================== */
+/* EMPTY STATE */
+/* ===================== */
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}

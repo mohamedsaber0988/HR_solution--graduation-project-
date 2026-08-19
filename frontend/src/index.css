@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-slate-800 text-sm antialiased;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, 0.08), transparent),
+      linear-gradient(160deg, #f8fafc 0%, #eef2ff 45%, #f0f9ff 100%);
+    background-attachment: fixed;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  ::selection {
+    @apply bg-blue-200/60 text-blue-950;
+  }
+}
+
+@layer components {
+  /* —— Surfaces —— */
+  .pro-card {
+    @apply rounded-2xl border border-white/90 bg-white/90 p-6 shadow-sm shadow-slate-900/[0.04] backdrop-blur-md
+      transition-all duration-300 ease-out
+      hover:border-blue-100/80 hover:shadow-[0_16px_48px_-12px_rgba(37,99,235,0.12)];
+  }
+
+  .pro-card-interactive {
+    @apply pro-card hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99];
+  }
+
+  .pro-card-flat {
+    @apply rounded-2xl border border-slate-200/70 bg-white/95 shadow-sm backdrop-blur-sm;
+  }
+
+  .glass {
+    @apply border border-white/60 bg-white/75 backdrop-blur-xl;
+  }
+
+  .glass-dark {
+    @apply border border-white/10 bg-slate-900/40 backdrop-blur-xl;
+  }
+
+  /* —— Sidebar —— */
+  .app-sidebar {
+    @apply fixed inset-y-0 left-0 z-50 flex w-64 flex-col text-white
+      bg-primary
+      shadow-[4px_0_24px_rgba(15,23,42,0.15)];
+  }
+
+  .nav-item-pro {
+    @apply relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium
+      text-blue-100/90 transition-all duration-200
+      hover:bg-white/10 hover:text-white
+      active:scale-[0.98];
+  }
+
+  .nav-item-pro-active {
+    @apply nav-item-pro overflow-visible bg-white/15 text-white shadow-lg shadow-blue-950/40 ring-1 ring-white/20;
+  }
+
+  /* Flush with sidebar edge; vertically centered in nav row */
+  .nav-active-indicator {
+    @apply pointer-events-none absolute -left-3 top-2 bottom-2 z-0 w-1 rounded-r-full bg-white shadow-[2px_0_8px_rgba(255,255,255,0.35)];
+  }
+
+  .nav-item-content {
+    @apply relative z-[1] flex min-w-0 flex-1 items-center gap-3;
+  }
+
+  /* —— Buttons —— */
+  .pro-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+      transition-all duration-200 active:scale-[0.97]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2;
+  }
+
+  .pro-btn-primary {
+    @apply pro-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25
+      hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-px;
+  }
+
+  .pro-btn-secondary {
+    @apply pro-btn border border-slate-200 bg-white text-slate-700 shadow-sm
+      hover:border-slate-300 hover:bg-slate-50;
+  }
+
+  .pro-btn-ghost {
+    @apply pro-btn text-slate-600 hover:bg-slate-100/80;
+  }
+
+  .pro-btn-danger {
+    @apply pro-btn bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-md shadow-red-500/20
+      hover:from-red-600 hover:to-rose-700;
+  }
+
+  /* —— Inputs —— */
+  .pro-input {
+    @apply w-full rounded-xl border border-slate-200/80 bg-white/80 px-4 py-2.5 text-sm text-slate-800
+      shadow-sm transition-all duration-200
+      placeholder:text-slate-400
+      hover:border-slate-300 hover:bg-white
+      focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20;
+  }
+
+  .pro-input-icon {
+    @apply pro-input pl-10;
+  }
+
+  /* —— Tables (scoped via .pro-content) —— */
+  .pro-table-wrap {
+    @apply pro-card-flat overflow-hidden p-0;
+  }
+
+  .pro-table {
+    @apply w-full text-left text-sm;
+  }
+
+  .pro-table thead {
+    @apply bg-slate-50/90 text-xs font-semibold uppercase tracking-wider text-slate-500;
+  }
+
+  .pro-table th {
+    @apply px-6 py-4;
+  }
+
+  .pro-table tbody tr {
+    @apply border-t border-slate-100/80 transition-colors duration-200;
+  }
+
+  .pro-table tbody tr:hover {
+    @apply bg-blue-50/40;
+  }
+
+  .pro-table td {
+    @apply px-6 py-4;
+  }
+
+  /* —— Badges —— */
+  .pro-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold tracking-wide;
+  }
+
+  .pro-badge-success {
+    @apply pro-badge bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100;
+  }
+
+  .pro-badge-warning {
+    @apply pro-badge bg-amber-50 text-amber-700 ring-1 ring-amber-100;
+  }
+
+  .pro-badge-danger {
+    @apply pro-badge bg-red-50 text-red-700 ring-1 ring-red-100;
+  }
+
+  .pro-badge-info {
+    @apply pro-badge bg-blue-50 text-blue-700 ring-1 ring-blue-100;
+  }
+
+  /* —— Page shell —— */
+  .pro-page {
+    @apply mx-auto max-w-[1600px] space-y-6 animate-fade-in;
+  }
+
+  .pro-header-bar {
+    @apply sticky top-0 z-40 flex items-center justify-between border-b border-white/70
+      bg-white/80 px-6 py-3.5 shadow-sm shadow-slate-900/[0.03] backdrop-blur-xl;
+  }
+
+  /* —— Skeleton —— */
+  .pro-skeleton {
+    @apply animate-pulse rounded-lg bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%];
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-600 bg-clip-text text-transparent;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300/80;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}
+
+/* Scoped polish inside main content areas */
+.pro-content input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.pro-content select,
+.pro-content textarea {
+  @apply transition-all duration-200;
+}
+
+.pro-content input:not([type='checkbox']):not([type='radio']):focus,
+.pro-content select:focus,
+.pro-content textarea:focus {
+  @apply ring-2 ring-blue-500/20;
+}
+
+.pro-content table tbody tr {
+  @apply transition-colors duration-200;
+}
+
+.pro-content table tbody tr:hover {
+  @apply bg-blue-50/30;
+}
+
+.pro-content button:not(:disabled):active {
+  @apply scale-[0.98];
+}
