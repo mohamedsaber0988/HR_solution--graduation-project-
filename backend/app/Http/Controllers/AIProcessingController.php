@@ -23,7 +23,7 @@ class AIProcessingController extends Controller
             if (is_numeric($result)) {
                 $score = (int) $result;
 
-                // التعديل: التحقق من أن السكور 50 أو أعلى قبل الإضافة
+                
                 if ($score >= 50) {
                     $finalCandidates[] = [
                         'application_id' => $app->application_id,
@@ -40,7 +40,7 @@ class AIProcessingController extends Controller
             }
         }
 
-        // ترتيب من الأعلى للأقل في السكور
+        
         usort($finalCandidates, fn($a, $b) => $b['ai_score'] <=> $a['ai_score']);
 
         return response()->json([

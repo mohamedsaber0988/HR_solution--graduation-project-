@@ -88,7 +88,7 @@ class JobVacancyController extends Controller
     }
     public function getVacancyApplications($vacancy_id)
 {
-    // بنجيب البيانات من غير علاقة الـ applicant
+    
     $applications = Applications::where('vacancy_id', $vacancy_id)->get();
 
     $data = $applications->map(function ($app) {

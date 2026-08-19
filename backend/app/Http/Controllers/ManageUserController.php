@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ManageUserController extends Controller
 {
-    // 1. إنشاء مستخدم جديد - (كودك شغال تمام)
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -56,7 +56,7 @@ class ManageUserController extends Controller
         });
     }
 
-    // 2. جلب الموظفين للإدارة (Admin Only) - تعديل الـ select
+    
     public function allUsers(Request $request)
     {
         $users = User::leftJoin('departments', 'users.department_id', '=', 'departments.dep_id')
@@ -69,7 +69,7 @@ class ManageUserController extends Controller
                 'users.role',
                 'users.job_title',
                 'users.base_salary',
-                'users.department_id', // ✅ تم إضافة الـ ID هنا عشان الفرونت يشوفه في الـ Edit
+                'users.department_id', 
                 'departments.dep_name as department_name',
                 'users.supervisor_id'
             )
@@ -81,7 +81,7 @@ class ManageUserController extends Controller
         ]);
     }
 
-    // 3. تحديث المستخدم - حل مشكلة الباسورد و unique email
+    
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -89,9 +89,9 @@ class ManageUserController extends Controller
         $request->validate([
             'first_name'     => 'sometimes|string|max:255',
             'last_name'      => 'sometimes|string|max:255',
-            'email'          => 'sometimes|email|unique:users,email,' . $user->user_id . ',user_id', // correct unique check
-            'password'       => 'nullable|string|min:6', // جعلها nullable للسماح بالـ empty string من axios
-            'phone'          => 'sometimes|string', // تبسيط الـ validation هنا
+            'email'          => 'sometimes|email|unique:users,email,' . $user->user_id . ',user_id',
+            'password'       => 'nullable|string|min:6', 
+            'phone'          => 'sometimes|string', 
             'role'           => 'sometimes|string',
             'base_salary'    => 'sometimes|numeric|min:0',
             'job_title'      => 'sometimes|string',
@@ -99,10 +99,10 @@ class ManageUserController extends Controller
             'supervisor_id'  => 'nullable|integer'
         ]);
 
-        // ✅ استخدام fill للأعمدة الغير حساسة، أسرع وأسهل
+        
         $user->fill($request->except(['password']));
 
-        // ✅ الإصلاح الجوهري هنا: استخدام filled بتتأكد إن القيمة مش فاضية من Axios
+        
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
@@ -115,12 +115,12 @@ class ManageUserController extends Controller
         ]);
     }
 
-    // 4. حذف مستخدم - (كودك شغال تمام)
+   
     public function destroy($id)
     {
         $user = User::findOrFail($id);
         
-        // الأفضل إضافة cascade delete في الداتا بيز نفسها، بس كودك صح كدة
+        
         LeaveBalance::where('user_id', $user->user_id)->delete();
         $user->delete();
 

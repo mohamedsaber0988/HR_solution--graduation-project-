@@ -34,7 +34,7 @@ class AttendanceController extends Controller
     // =========================
     // GET SETTINGS
     // =========================
-    $setting = AttendanceSetting::first(); // أو حسب الشركة
+    $setting = AttendanceSetting::first(); 
 
     // =========================
     // LOCATION CHECK
@@ -146,11 +146,11 @@ private function calculateDistance($lat1, $lon1, $lat2, $lon2)
 {
     $user = $request->user();
 
-    // تعديل الفترة لتكون الشهر الماضي (Last Month)
+    
     $start = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
     $end = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
 
-    // باقي الكود زي ما هو بالظبط
+    
     $attendanceData = Attendance::where('user_id', $user->user_id)
         ->whereBetween('date', [$start, $end])
         ->orderBy('date', 'desc')
@@ -184,7 +184,7 @@ public function Current_history(Request $request)
     $start = Carbon::now()->startOfMonth()->format('Y-m-d');
     $end = Carbon::now()->endOfMonth()->format('Y-m-d');
 
-    // جلب البيانات مع التأكد من ترتيبها
+    
     $attendanceData = Attendance::where('user_id', $user->user_id)
         ->whereBetween('date', [$start, $end])
         ->orderBy('date', 'desc')
@@ -194,9 +194,9 @@ public function Current_history(Request $request)
         return [
             'date'     => $item->date,
             'day'      => Carbon::parse($item->date)->format('l'),
-            'in_time'  => $item->time_in,  // ده مطابق للـ fillable عندك
-            'out_time' => $item->time_out, // ده مطابق للـ fillable عندك
-            'status'   => strtolower($item->status), // بنحولها lowercase عشان الـ CSS في الفرونت
+            'in_time'  => $item->time_in, 
+            'out_time' => $item->time_out, 
+            'status'   => strtolower($item->status),
         ];
     });
 
@@ -216,7 +216,7 @@ public function getTodayStatus(Request $request)
     $user = $request->user();
     $today = now()->toDateString();
 
-    // البحث عن سجل حضور الموظف اليوم
+    
     $attendance = Attendance::where('user_id', $user->user_id)
         ->where('date', $today)
         ->first();
@@ -231,7 +231,7 @@ public function getTodayStatus(Request $request)
     }
 
     return response()->json([
-        'status' => $attendance->status, // present, late, etc.
+        'status' => $attendance->status, 
         'check_in' => $attendance->time_in ? Carbon::parse($attendance->time_in)->format('h:i A') : '--:--',
         'check_out' => $attendance->time_out ? Carbon::parse($attendance->time_out)->format('h:i A') : '--:--',
         'label' => $attendance->time_out ? 'Work Completed' : 'Checked In'

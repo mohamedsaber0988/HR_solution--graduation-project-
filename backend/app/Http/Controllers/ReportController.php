@@ -8,7 +8,7 @@ use App\Models\Attendance;
 use App\Models\Payroll;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Log; // أضفنا هذا للـ Debugging
+use Illuminate\Support\Facades\Log; 
 
 class ReportController extends Controller
 {

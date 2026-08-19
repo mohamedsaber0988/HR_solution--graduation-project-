@@ -10,24 +10,22 @@ class PerformanceController extends Controller
 {
     public function index(Request $request)
     {
-        // 💡 1. تحديد الوقت والتاريخ ليكون (الشهر الفائت افتراضياً)
+        
         $lastMonth = Carbon::now()->subMonth();
         $month = $request->query('month', $lastMonth->month);
         $year = $request->query('year', $lastMonth->year);
 
         $user = $request->user();
 
-        // 2. بناء الاستعلام: الفلتر الأساسي هو جلب الـ employees فقط
-        // نستخدم eager loading للقسم لتحسين الأداء
+       
         $query = User::with('department')->where('role', 'employee');
 
-        // 3. تطبيق صلاحيات المشرف (Supervisor)
-        // إذا كان المستخدم supervisor، يرى فقط الموظفين (employees) الذين في قسمه
+        
         if ($user->role === 'supervisor') {
             $query->where('department_id', $user->department_id);
         }
 
-        // 4. جلب البيانات مع حساب الإحصائيات (Aggregations)
+        
         $users = $query->withCount([
             // حساب المهام المكتملة في الشهر المحدد
             'tasks as completed_tasks_count' => function ($query) use ($month, $year) {
@@ -35,17 +33,17 @@ class PerformanceController extends Controller
                       ->whereYear('due_date', $year)
                       ->where('status', 'completed');
             },
-            // حساب المهام المطلوبة: أي مهمة تاريخ تسليمها يقع في هذا الشهر هي مطلوبة!
+            
             'tasks as required_tasks_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('due_date', $month)
                       ->whereYear('due_date', $year);
             },
-            // إجمالي أيام الحضور المسجلة (بما فيها الغياب المسجل)
+            
             'attendances as total_attendance_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year);
             },
-            // أيام الحضور الفعلي (حاضر أو متأخر)
+           
             'attendances as present_days_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year)
@@ -53,20 +51,20 @@ class PerformanceController extends Controller
             },
         ])->get();
 
-        // 5. معالجة البيانات وحساب السكور لكل موظف
+       
         $performances = $users->map(function ($user) {
             
-            // سكور أداء المهام (Task Score)
+           
             $taskScore = $user->required_tasks_count > 0 
                 ? ($user->completed_tasks_count / $user->required_tasks_count) * 100 
-                : 100; // إذا لم يتم تكليفه بمهام، السكور 100 حسب سياسة الكود الأصلي
+                : 100; 
 
-            // سكور الحضور (Attendance Score)
+            
             $attendanceScore = $user->total_attendance_count > 0 
                 ? ($user->present_days_count / $user->total_attendance_count) * 100 
                 : 0;
 
-            // الحسبة النهائية (متوسط المهام والحضور)
+            
             $finalScore = ($taskScore + $attendanceScore) / 2;
 
             return [
@@ -88,7 +86,7 @@ class PerformanceController extends Controller
             ];
         });
 
-        // 6. إرجاع النتيجة النهائية
+        
         return response()->json([
             'status' => 'success',
             'month'  => (int)$month,
@@ -97,9 +95,7 @@ class PerformanceController extends Controller
         ]);
     }
 
-    /**
-     * تحديد التقييم بناءً على السكور النهائي
-     */
+    
     private function getRatingLabel($score)
     {
         if ($score >= 90) return 'Excellent';

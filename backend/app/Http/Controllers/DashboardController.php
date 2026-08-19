@@ -55,14 +55,13 @@ class DashboardController extends Controller
         // 3. Performance Distribution Logic
         // ==========================================
         $users = User::withCount([
-            // حساب المهام المكتملة
             'tasks as completed_tasks_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('due_date', $month)
                       ->whereYear('due_date', $year)
                       ->where('status', 'completed');
             },
 
-            // حساب المهام المطلوبة (المكتملة + المتأخرة)
+            
             'tasks as required_tasks_count' => function ($query) use ($month, $year, $now) {
                 $query->whereMonth('due_date', $month)
                       ->whereYear('due_date', $year)
@@ -72,13 +71,13 @@ class DashboardController extends Controller
                       });
             },
 
-            // إجمالي أيام العمل المسجلة
+            
             'attendances as total_attendance_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year);
             },
 
-            // أيام الحضور الفعلي
+           
             'attendances as present_days_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year)
@@ -94,20 +93,20 @@ class DashboardController extends Controller
         ];
 
         foreach ($users as $user) {
-            // حساب تقييم المهام
+            
             $taskScore = $user->required_tasks_count > 0
                 ? ($user->completed_tasks_count / $user->required_tasks_count) * 100
                 : 100;
 
-            // حساب تقييم الحضور
+            
             $attendanceScore = $user->total_attendance_count > 0
                 ? ($user->present_days_count / $user->total_attendance_count) * 100
                 : 0;
 
-            // الدرجة النهائية (متوسط المهم والحضور)
+           
             $finalScore = ($taskScore + $attendanceScore) / 2;
 
-            // تصنيف المستوى
+            
             $rating = $this->getRatingLabel($finalScore);
 
             $distribution[$rating]++;
@@ -122,16 +121,14 @@ class DashboardController extends Controller
                 'total_employees' => $totalEmployees,
                 'present_today' => $presentToday,
                 'on_leave_today' => $onLeaveToday,
-                // مصفوفة تحتوي على تفاصيل طلبات المشرفين المعلقة
+                
                 'pending_supervisor_leaves' => $pendingSupervisorLeaves, 
                 'performance_distribution' => $distribution,
             ]
         ]);
     }
 
-    /**
-     * تحديد التسمية بناءً على الدرجة
-     */
+
     private function getRatingLabel($score)
     {
         if ($score >= 90) return 'excellent';
@@ -145,7 +142,7 @@ public function WebHRDashboard(Request $request)
 {
     $today = Carbon::today();
     
-    // 💡 التعديل هنا: تحديد الشهر الفائت والسنة الفائتة تلقائياً بناءً على تاريخ اليوم
+    
     $lastMonth = Carbon::now()->subMonth();
     $month = $request->query('month', $lastMonth->month);
     $year  = $request->query('year', $lastMonth->year);
@@ -184,23 +181,23 @@ public function WebHRDashboard(Request $request)
     $users = User::with('department')
         ->where('role', 'employee') 
         ->withCount([
-            // حساب المهام المكتملة في الشهر الفائت
+            
             'tasks as completed_tasks_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('due_date', $month)
                       ->whereYear('due_date', $year)
                       ->where('status', 'completed');
             },
-            // 💡 التعديل هنا: بما أن الشهر انتهى، فكل المهام التي تاريخ تسليمها في هذا الشهر هي "مطلوبة" بالكامل
+            
             'tasks as required_tasks_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('due_date', $month)
                       ->whereYear('due_date', $year);
             },
-            // إجمالي أيام العمل المسجلة في الشهر الفائت
+            
             'attendances as total_attendance_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year);
             },
-            // أيام الحضور الفعلي في الشهر الفائت
+            
             'attendances as present_days_count' => function ($query) use ($month, $year) {
                 $query->whereMonth('date', $month)
                       ->whereYear('date', $year)
@@ -222,7 +219,7 @@ public function WebHRDashboard(Request $request)
 
         $taskScore = $user->required_tasks_count > 0
             ? ($user->completed_tasks_count / $user->required_tasks_count) * 100
-            : 100; // 💡 تعديل عادل: لو مفيش مهام مطلوب منه، ياخد 100% عشان الحضور ميتظلمش
+            : 100; 
 
         $attendanceScore = $user->total_attendance_count > 0
             ? ($user->present_days_count / $user->total_attendance_count) * 100
