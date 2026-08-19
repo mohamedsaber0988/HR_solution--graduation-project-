@@ -36,10 +36,10 @@ class AuthController extends Controller
 
      public function profile(Request $request)
     {
-        // التحقق من أن المستخدم مسجل دخول
+        
         $user = $request->user();
 
-        // تحميل علاقة القسم (Department) إذا كانت موجودة
+        
         $user->load('department');
 
         return response()->json([
@@ -51,12 +51,12 @@ class AuthController extends Controller
                 'department' => $user->department->dep_name ?? 'N/A',
                 'email'      => $user->email,
                 'phone'      => $user->phone ?? 'N/A',
-                'role'       => $user->role, // مهم للموبايل عشان يعرف يظهر أيه ويخفي أيه
+                'role'       => $user->role, 
             ]
         ]);
     }
 
-    // دالة تسجيل الخروج (إضافة إضافية مفيدة هنا)
+    
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

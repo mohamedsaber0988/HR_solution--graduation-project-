@@ -8,7 +8,7 @@ class AttendanceSettingController extends Controller
 {
     public function update(Request $request)
 {
-    // validation
+    
     $request->validate([
         'base_latitude' => 'required',
         'base_longitude' => 'required',
@@ -19,17 +19,17 @@ class AttendanceSettingController extends Controller
         'late_grace_minutes' => 'required|numeric',
     ]);
 
-    // نجيب record ثابت
+    
     $setting = AttendanceSetting::where('setting_id', 1)->first();
 
-    // لو مش موجود (أول مرة)
+    
     if (!$setting) {
         $setting = AttendanceSetting::create([
-            'setting_id' => 1, // تثبيت
+            'setting_id' => 1, 
             ...$request->all()
         ]);
     } else {
-        // update
+        
         $setting->update($request->all());
     }
 

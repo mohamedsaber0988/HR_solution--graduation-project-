@@ -20,15 +20,15 @@ public function openJobs()
 {
     $request->validate([
         'vacancy_id' => 'required|exists:job_vacancies,vacancy_id',
-        'cv' => 'required|mimes:pdf|max:2048', // ملف PDF لا يزيد عن 2 ميجا
+        'cv' => 'required|mimes:pdf|max:2048',
     ]);
 
-    // رفع الملف وتخزينه في مجلد cvs جوه الـ public storage
+    
     $path = $request->file('cv')->store('cvs', 'public');
 
-    // حفظ البيانات في الجدول
+    
     $application = Applications::create([
-        //'applicant_id' => $request->user()->user_id, // الـ ID بتاع اليوزر اللي عامل login
+        
         'vacancy_id'   => $request->vacancy_id,
         'cv_file'      => $path,
     ]);

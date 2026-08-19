@@ -10,9 +10,7 @@ use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
-    /**
-     * عرض آخر Payslip للموظف (Mobile App)
-     */
+    
     public function getLatestPayslip(Request $request)
 {
     $user = $request->user();

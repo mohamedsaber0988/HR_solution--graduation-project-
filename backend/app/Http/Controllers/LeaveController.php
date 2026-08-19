@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LeaveRequest;
-use App\Models\Alerts; // تأكد من اسم الموديل عندك (Alerts أو alerts)
+use App\Models\Alerts; 
 use App\Models\LeaveBalance;
 use App\Models\Attendance;
 use App\Models\AttendanceSetting;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class LeaveController extends Controller
 {
-    // 1. تقديم طلب إجازة (مع موافقة تلقائية للـ HR)
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -27,7 +27,7 @@ class LeaveController extends Controller
         $user = $request->user();
         $days = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date)) + 1;
 
-        // جلب الرصيد للسنة الحالية
+        
         $balance = LeaveBalance::where('user_id', $user->user_id)
             ->where('year', Carbon::parse($request->start_date)->year)
             ->first();
@@ -41,7 +41,7 @@ class LeaveController extends Controller
 
             if ($user->role === 'HR_manager' or $user->role === 'admin') {
                 $status = 'approved';
-                // تنفيذ إجراءات الموافقة فوراً (رصيد + حضور + تنبيه)
+                
                 $this->executeApprovalActions($user->user_id, strtolower($request->leave_type), $days, $request->start_date, $request->end_date);
             }
 
@@ -70,13 +70,13 @@ class LeaveController extends Controller
         });
     }
 
-    // 2. عرض طلبات الموظفين للسوبرفايزر (نفس القسم)
+   
     public function supervisorLeaves(Request $request)
     {
         $user = $request->user();
         $query = LeaveRequest::join('users', 'leave_requests.user_id', '=', 'users.user_id');
 
-        // HR Managers and Admins can see all leave requests.
+        
         if ($user->role !== 'admin' && $user->role !== 'HR_manager') {
             $query->where('users.department_id', $user->department_id);
         }
@@ -104,7 +104,7 @@ class LeaveController extends Controller
         return response()->json(['success' => true, 'data' => $leaves]);
     }
 
-    // 3. عرض طلبات السوبرفايزرز للـ HR Manager
+    
 public function hrManagerLeaves(Request $request)
 {
     $status = $request->query('status');
@@ -118,7 +118,7 @@ public function hrManagerLeaves(Request $request)
     }
 
     $leaves = $query->select(
-            'leave_requests.leave_id as id', // أو leave_id حسب اسم العمود عندك
+            'leave_requests.leave_id as id', 
             'leave_requests.leave_type',
             'leave_requests.start_date',
             'leave_requests.end_date',
@@ -129,13 +129,13 @@ public function hrManagerLeaves(Request $request)
             'users.last_name',
             'departments.dep_name'
         )
-        ->orderBy('leave_requests.created_at', 'desc') // إضافة ترتيب من الأحدث للأقدم أفضل للـ HR
+        ->orderBy('leave_requests.created_at', 'desc') 
         ->get();
 
     return response()->json(['success' => true, 'data' => $leaves]);
 }
 
-    // 4. موافقة على طلب (Supervisor/HR)
+    
     public function approve($id)
     {
         return DB::transaction(function () use ($id) {
@@ -147,7 +147,7 @@ public function hrManagerLeaves(Request $request)
 
             $days = Carbon::parse($leave->start_date)->diffInDays(Carbon::parse($leave->end_date)) + 1;
 
-            // تنفيذ إجراءات الموافقة
+            
             $this->executeApprovalActions($leave->user_id, strtolower($leave->leave_type), $days, $leave->start_date, $leave->end_date);
 
             $leave->status = 'approved';
@@ -157,7 +157,7 @@ public function hrManagerLeaves(Request $request)
         });
     }
 
-    // 5. رفض طلب
+    
     public function reject($id)
     {
         $leave = LeaveRequest::find($id);
@@ -175,7 +175,7 @@ public function hrManagerLeaves(Request $request)
         return response()->json(['message' => 'Leave rejected']);
     }
 
-    // 6. تاريخ الإجازات والرصيد للمستخدم الحالي
+   
     public function leaveHistory(Request $request)
     {
         $user = $request->user();
@@ -210,15 +210,13 @@ public function hrManagerLeaves(Request $request)
         ]);
     }
 
-    /**
-     * دالة داخلية لتنفيذ عمليات ما بعد الموافقة (خصم رصيد، تنبيه، حضور)
-     */
+    
     private function executeApprovalActions($userId, $type, $days, $start, $end)
     {
         $startDate = Carbon::parse($start);
         $endDate = Carbon::parse($end);
 
-        // 1. خصم الرصيد
+        
         $balance = LeaveBalance::where('user_id', $userId)
             ->where('year', $startDate->year)
             ->first();
@@ -229,18 +227,18 @@ public function hrManagerLeaves(Request $request)
             $balance->save();
         }
 
-        // 2. إنشاء تنبيه للموظف
+        
         Alerts::create([
             'user_id' => $userId,
             'alert_type' => 'leave_approved',
             'content' => 'Your leave request from ' . $start . ' has been approved'
         ]);
 
-        // جلب الإعدادات لإضافتها لسجل الحضور
+        
         $setting = AttendanceSetting::first();
         $settingId = $setting ? $setting->setting_id : null;
 
-        // 3. تحديث سجلات الحضور لتصبح "إجازة"
+        
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
             Attendance::updateOrCreate(
                 ['user_id' => $userId, 'date' => $date->format('Y-m-d')],
